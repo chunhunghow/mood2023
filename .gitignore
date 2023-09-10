@@ -3,3 +3,4 @@
 *.py.bak
 *.ckpt
 *.nii.gz
+scripts/wandb
