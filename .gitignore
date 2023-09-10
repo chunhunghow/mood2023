@@ -1,0 +1,5 @@
+
+
+*.py.bak
+*.ckpt
+*.nii.gz
