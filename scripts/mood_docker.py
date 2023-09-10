@@ -7,7 +7,7 @@ import copy
 #from pytorch_lightning.trainer import Trainer
 import torch
 from torch import nn
-from mood_dataloader import LoadMOOD
+#from mood_dataloader import LoadMOOD
 from torch.utils.data import DataLoader
 #from pytorch_lightning.loggers import WandbLogger
 import sys
@@ -382,82 +382,82 @@ def parse_opt(known=False):
     return opt
 
 
-if __name__ == '__main__':
-
-    args = parse_opt()
-
-    path = lambda x: f'../data/{x}/{x}_train'
-
-    dataset = LoadMOOD(path(args.modality))
-    batch_size = args.batch_size
-    model = Model(model=args.model, 
-                  _3d=args.is3d,
-                  max_batch_size=args.max_batch_size
-
-
-                  )
-
-    train_loader = DataLoader(
-        dataset,
-        batch_size=batch_size,
-        num_workers=4,
-        drop_last=False)
-    logger = None
-
-    project = 'MOOD'
-    logdir = Path('./wandb') / project
-    if not os.path.exists(logdir): os.makedirs(logdir)
-    default_logger_cfgs = {
-              "project" : project,
-              "name": '',
-              'entity': '',
-              "save_dir": logdir,
-              "offline": not args.wandb ,
-                     }
-
-    logger = WandbLogger(**default_logger_cfgs)
-    trainer = Trainer(accelerator="gpu", devices=[int(args.device)], logger=logger, max_epochs=10000) #single gpu
-
-
-    if not (args.test or args.predict):
-        mode = 'train'
-    elif args.test and not args.predict:
-        mode = 'test'
-    else:
-        mode = 'predict'
-
-
-    if mode == 'train':
-        trainer.fit(model, train_loader)
-    elif mode == 'test' :
-        dataset = LoadMOOD(f'../data/{args.modality}/toy') #your directory of datset
-        test_dataset = dataset
-        test_loader = DataLoader(
-            test_dataset,
-            batch_size=batch_size,
-            num_workers=4,
-            shuffle=False,
-            drop_last=False)
-        #assert args.ckpt is not None
-        if args.ckpt_dir is not None:
-            ckpt = glob.glob(f'wandb/MOOD/MOOD/{args.ckpt_dir}/checkpoints/*')[0] #your checkpoint
-            print(f'Loading checkpoint from {ckpt}..')
-            model.load_state_dict(torch.load(ckpt,map_location='cpu')['state_dict'])
-            print('Loaded successfully!')
-        trainer.test(model, test_loader)
-
-    else:
-        train_loader = DataLoader(
-            dataset,
-            batch_size=1,
-            num_workers=4,
-            shuffle=False,
-            drop_last=False)
-        if args.ckpt_dir is not None:
-            ckpt = glob.glob(f'wandb/MOOD/MOOD/{args.ckpt_dir}/checkpoints/*')[0] #your checkpoint
-            print(f'Loading checkpoint from {ckpt}..')
-            model.load_state_dict(torch.load(ckpt,map_location='cpu')['state_dict'])
-            print('Loaded successfully!')
-        trainer.predict(model, train_loader)
-        np.save(f'{args.modality}_regret.npy',model.regret)
-
+#if __name__ == '__main__':
+#
+#    args = parse_opt()
+#
+#    path = lambda x: f'../data/{x}/{x}_train'
+#
+#    dataset = LoadMOOD(path(args.modality))
+#    batch_size = args.batch_size
+#    model = Model(model=args.model, 
+#                  _3d=args.is3d,
+#                  max_batch_size=args.max_batch_size
+#
+#
+#                  )
+#
+#    train_loader = DataLoader(
+#        dataset,
+#        batch_size=batch_size,
+#        num_workers=4,
+#        drop_last=False)
+#    logger = None
+#
+#    project = 'MOOD'
+#    logdir = Path('./wandb') / project
+#    if not os.path.exists(logdir): os.makedirs(logdir)
+#    default_logger_cfgs = {
+#              "project" : project,
+#              "name": '',
+#              'entity': '',
+#              "save_dir": logdir,
+#              "offline": not args.wandb ,
+#                     }
+#
+#    logger = WandbLogger(**default_logger_cfgs)
+#    trainer = Trainer(accelerator="gpu", devices=[int(args.device)], logger=logger, max_epochs=10000) #single gpu
+#
+#
+#    if not (args.test or args.predict):
+#        mode = 'train'
+#    elif args.test and not args.predict:
+#        mode = 'test'
+#    else:
+#        mode = 'predict'
+#
+#
+#    if mode == 'train':
+#        trainer.fit(model, train_loader)
+#    elif mode == 'test' :
+#        dataset = LoadMOOD(f'../data/{args.modality}/toy') #your directory of datset
+#        test_dataset = dataset
+#        test_loader = DataLoader(
+#            test_dataset,
+#            batch_size=batch_size,
+#            num_workers=4,
+#            shuffle=False,
+#            drop_last=False)
+#        #assert args.ckpt is not None
+#        if args.ckpt_dir is not None:
+#            ckpt = glob.glob(f'wandb/MOOD/MOOD/{args.ckpt_dir}/checkpoints/*')[0] #your checkpoint
+#            print(f'Loading checkpoint from {ckpt}..')
+#            model.load_state_dict(torch.load(ckpt,map_location='cpu')['state_dict'])
+#            print('Loaded successfully!')
+#        trainer.test(model, test_loader)
+#
+#    else:
+#        train_loader = DataLoader(
+#            dataset,
+#            batch_size=1,
+#            num_workers=4,
+#            shuffle=False,
+#            drop_last=False)
+#        if args.ckpt_dir is not None:
+#            ckpt = glob.glob(f'wandb/MOOD/MOOD/{args.ckpt_dir}/checkpoints/*')[0] #your checkpoint
+#            print(f'Loading checkpoint from {ckpt}..')
+#            model.load_state_dict(torch.load(ckpt,map_location='cpu')['state_dict'])
+#            print('Loaded successfully!')
+#        trainer.predict(model, train_loader)
+#        np.save(f'{args.modality}_regret.npy',model.regret)
+#
