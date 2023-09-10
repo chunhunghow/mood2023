@@ -7,14 +7,14 @@ Our approach adapted the Likelihood Regret code from [official repo](https://git
 
 ### Our VIT model perform posterior distribution learning per patch. The regret will be high If the patch contains outlier.
 ![Brain outlier detection](MOOD_brain_example.png)
-![Brain outlier detection](MOOD_brain_example.png)
+![Abdom outlier detection](MOOD_abdom_example.png)
 
 
 
 ### Packages required
 
 
-Install poetry and create our environment in the directory of pyproject.toml
+Install poetry and create our environment in the directory of pyproject.toml, otherwise pip install accordingly.
 
 ```
 poetry install
@@ -39,6 +39,8 @@ For other datasets, refer to mood_dataloader.py LoadMOOD function to see the dat
 ### Training VIT-VAE model
 
 All files are stored under script/. Some files are requied for building docker, some are for training. 
+
+We will be using lightning to train our model.
 
 Before training, if wandb logger will be used, fill in the wandb arguments in mood_train.py line 411-414, and use --wandb flag.
 
